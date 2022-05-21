@@ -255,6 +255,22 @@ public class AllPairShortestPath
 			}
 		}
 	}
+	
+	/**
+	 * Reescribe el archivo guategrafo.txt con la informacion generada en la ejecucion.
+	 * @throws IOException
+	 */
+	public void rewriteFile() throws IOException {
+		ArrayList<String> parejas = new ArrayList<String>();
+		for(String[] a : aristas) {
+			String viaje = a[0] + ", "+a[1];
+			String invertedViaje = a[1]+", "+a[0];
+			if(!parejas.contains(viaje) && !parejas.contains(invertedViaje))
+				Reader.writeFile(a[0] + " " + a[1] + " "+a[2]+"\n");
+			parejas.add(viaje);
+			parejas.add(invertedViaje);
+		}
+	}
     
 }
 

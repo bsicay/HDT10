@@ -84,6 +84,12 @@ public class HDT10 {
             }
             
         }while (option != 5);
+        Reader.deleteFile();
+		try {
+			floyd.rewriteFile();
+		}catch(IOException e) {
+			System.out.println("Ha ocurrido un error a reescribir el archivo.");
+		}
         // Print the solution
     }
 }
