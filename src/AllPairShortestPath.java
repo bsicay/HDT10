@@ -175,6 +175,34 @@ public class AllPairShortestPath
 	public String getGraphCenter() {
 		return this.graphCenter;
 	}
+	
+	/**
+	 * Permite la eliminaci�n de una arista entre dos nodos (ruta entre dos ciudades).
+	 * @param origen. Ciudad de origen.
+	 * @param destino. Ciudad de destino.
+	 * @return String. Mensaje de respuesta.
+	 */
+	public String breakRoute(String origen, String destino) {
+		String[] ruta = null;
+		String[] inverted = null;
+		for(String[] a : aristas) {
+			if(a[0].equals(origen) && a[1].equals(destino))
+				ruta = a;
+			if(a[1].equals(origen) && a[0].equals(destino))
+				inverted = a;
+		}
+		if(ruta != null) {
+			aristas.remove(ruta);
+			aristas.remove(inverted);
+			try {
+				matrizAdyacencias();
+				return "Ruta eliminada correctamente, se han recalculado las rutas mas cortas.";
+			} catch (Exception e) {
+				return "Ha ocurrido un error al tratar de eliminar esta ruta.";
+			}
+		}else
+			return"No se ha encontrado la ruta especificada.";
+	}
     
 }
 

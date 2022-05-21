@@ -43,7 +43,11 @@ public class HDT10 {
 	                	
 		        	}break;
 	                case 2: {
-	                	
+	                	System.out.println("Indique la ciudad de origen:");
+						origen = in.nextLine();
+						System.out.println("Indique la ciudad destino:");
+						destino = in.nextLine();
+						System.out.println(floyd.breakRoute(origen,destino));
 		        	}break;
 	                case 3: {
 	                	System.out.println("Ingrese la ciudad de origen:");
