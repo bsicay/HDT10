@@ -40,6 +40,7 @@ public class HDT10 {
 				String destino = "";
                 switch(option) {
 	                case 1: {
+	                	
 		        	}break;
 	                case 2: {
 	                	
@@ -52,7 +53,7 @@ public class HDT10 {
 						System.out.println(floyd.shorterRoute(origen,destino));
 		        	}break;
 	                case 4: {
-		        		
+	                	System.out.println("La ciudad al centro del grafo es: "+ floyd.getGraphCenter());
 		        	}break;
 	                default: {
 		        		

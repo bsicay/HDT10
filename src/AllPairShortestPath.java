@@ -96,6 +96,7 @@ public class AllPairShortestPath
 				}
 			}
 		}
+		graphCenter(pesos);
 	}
 	
 	/**
@@ -141,6 +142,38 @@ public class AllPairShortestPath
 		for(int i = 1;i<cities.length;i++)
 			iCities += cities[i] + ", ";
 		return iCities.substring(0, iCities.length()-2);
+	}
+	
+	/**
+	 * Se encarga de calcular el centro del grafo.
+	 * @param pesos. Matriz con los pesos de cada arista.
+	 */
+	public void graphCenter(Double[][] pesos) {
+		Double[] eccentricities = new Double[vertices.size()];
+		for(int i=0;i<vertices.size();i++) {
+			for(int j=0;j<vertices.size();j++) {
+				if(eccentricities[j]==null)
+					eccentricities[j]=pesos[i][j];
+				else if (pesos[i][j]>eccentricities[j])
+					eccentricities[j]=pesos[i][j];
+			}
+		}
+		int min = eccentricities[0].intValue();
+		graphCenter = vertices.get(0);
+		for(int i=0;i<vertices.size();i++) {
+			if(eccentricities[i]<min) {
+				min = eccentricities[i].intValue();
+				graphCenter = vertices.get(i);
+			}
+		}
+	}
+	
+	/**
+	 * Metodo getter del centro del grafo.
+	 * @return String. Centro del grafo.
+	 */
+	public String getGraphCenter() {
+		return this.graphCenter;
 	}
     
 }
