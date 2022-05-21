@@ -8,10 +8,10 @@ public class HDT10 {
         AllPairShortestPath floyd = new AllPairShortestPath();
         int option = 0;
         String menu= "Seleccione la opcion que desea realizar:\n\n"
-        		+ "1. Agregar distancias"
-        		+ "\n2. Eliminar distancias"
-        		+ "\n3. Ver matriz de Flyod"
-        		+ "\n4.Ver las rutas cortas"
+        		+ "1. Nueva ruta entre dos ciudades"
+        		+ "\n2. Interrupción de tráfico entre dos ciudades"
+        		+ "\n3. Calcular la ruta mas corta entre dos ciudades"
+        		+ "\n4. Mostrar el centro del grafo"
         		+ "\n5. Salir";
 
         do {
