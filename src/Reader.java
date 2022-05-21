@@ -10,12 +10,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Reader {
+	
+	//Declaracion de variables
     File file;
+    
     Scanner scan;
-    ArrayList<String> nodeArray = new ArrayList<String>();      //Contiene el nombre de los lugares
+    
+    ArrayList<String> nodeArray = new ArrayList<String>(); //Contiene el nombre de los lugares
+    
     Integer[][] matrix;
+    
     public static final String PATH = System.getProperty("user.dir") + "\\guategrafo.txt";
 
+    /**
+     * Metodo encargado de leer lo necesario
+     */
     public Reader(){
         findFile();
         getNodes();
@@ -29,11 +38,18 @@ public class Reader {
         return toPrimitive();
     }
 
+    /**
+     * Metedo que se encarga de "encontrar" la ruta del grafo
+     */
     private void findFile(){
-        try {
+        try 
+        {
             file = new File("src/guategrafo.txt");
             scan = new Scanner(file);
-        }catch(FileNotFoundException e){
+        }
+        
+        catch(FileNotFoundException e)
+        {
             System.out.println("No se encontro el archivo");
             System.exit(0);
         }
@@ -62,25 +78,40 @@ public class Reader {
 		  return linesList.toArray(new String[linesList.size()]); //convertir lista a array
 	}
 
+	/**
+	 * Metodo que se encarga de convertir la cadena de un numero a un tipo entero
+	 * @param str es una variable de tipo cadena el cual es en realidad un numero 
+	 * @return retorna "true" si la cadena se puede convertir a un entero, en caso de que no retorna "falso"
+	 */
     public boolean isNumber(String str){
         boolean flag = true;
 
-        try{
+        try
+        {
             int n = Integer.parseInt(str);
-        }catch (NumberFormatException e){
+        }
+        
+        catch (NumberFormatException e)
+        {
             flag = false;
         }
 
         return flag;
     }
 
+    /**
+     * Metodo que separa los valores y los guarda en un array
+     */
     public void getNodes(){
-        while(scan.hasNext()){
+    	
+        while(scan.hasNext())
+        {
             String line = scan.nextLine();
             String[] lineArray = line.split(" ");
 
             for (String word: lineArray) {
-                if((nodeArray.contains(word) == false)&&(isNumber(word)==false)){
+                if((nodeArray.contains(word) == false)&&(isNumber(word)==false))
+                {
                     nodeArray.add(word);
                 }
             }
@@ -89,9 +120,13 @@ public class Reader {
         findFile(); /*Resetea el Scanner*/
     }
 
-
+    /**
+     * Metodo encargado de crear la matriz
+     */
     public void doMatrix(){
-        while(scan.hasNext()){
+    	
+        while(scan.hasNext())
+        {
             String line = scan.nextLine();
             String[] array = line.split(" ");
 
@@ -106,7 +141,9 @@ public class Reader {
                 matrix[i][i] = 0;
             }
         }
+        
         for (int i = 0; i < matrix.length; i++) {
+        	
             for (int j = 0; j < matrix[i].length; j++) {
                 if(matrix[i][j] == null){
                     matrix[i][j] = 99999;
@@ -115,11 +152,17 @@ public class Reader {
         }
     }
 
+    /**
+     * 
+     * @return primitive es un array de numeros enteros
+     */
     public int[][] toPrimitive(){
+    	
         int len = matrix.length;
         int[][] primitive = new int[len][len];
 
         for (int i = 0; i < matrix.length; i++) {
+        	
             for (int j = 0; j < matrix[i].length; j++) {
                     primitive[i][j] = matrix[i][j];
             }
@@ -127,6 +170,10 @@ public class Reader {
         return primitive;
     }
 
+    /**
+     * Se encarga de imprimir la matriz
+     * @param matrix es un arreglo de numeros enteros
+     */
     public void printMatrix(Integer[][] matrix){
         for (Integer[] row: matrix) {
             for (Integer num: row) {
@@ -153,12 +200,11 @@ public class Reader {
         fw.close();        
     }
 	
+	/**
+	 * Se encarga de eliminar el archhivo que se le proporcione.
+	 */
 	public static void deleteFile() {
 		File file = new File(PATH);
 		file.delete();
 	}
-	
-	
-
-
 }
