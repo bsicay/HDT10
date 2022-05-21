@@ -143,6 +143,5 @@ public class HDT10 {
 		}catch(IOException e) {
 			System.out.println("Ha ocurrido un error a reescribir el archivo.");
 		}
-        // Print the solution
     }
 }
