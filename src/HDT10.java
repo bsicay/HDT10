@@ -38,9 +38,24 @@ public class HDT10 {
                 option= Integer.parseInt(in.nextLine());
                 String origen = "";
 				String destino = "";
+				int peso = 0;
                 switch(option) {
 	                case 1: {
-	                	
+	                	System.out.println("Indique la ciudad de origen:");
+						origen = in.nextLine();
+						System.out.println("Indique la ciudad destino:");
+						destino = in.nextLine();
+						try {
+							System.out.println("Indique la cantidad de kilometros entre ambas ciudades:");
+							peso = Integer.parseInt(in.nextLine());
+						}catch(Exception e) {
+							System.out.println("Ingrese un numero entero");
+						}
+						try {
+							System.out.println(floyd.newRoute(origen,destino,peso));
+						}catch (Exception e) {
+							System.out.println("Ha ocurrido un error al manipular el grafo");
+						}
 		        	}break;
 	                case 2: {
 	                	System.out.println("Indique la ciudad de origen:");

@@ -203,6 +203,58 @@ public class AllPairShortestPath
 		}else
 			return"No se ha encontrado la ruta especificada.";
 	}
+	
+	/**
+	 * Permite crear nodos (si las ciudades de origen o destino no existen) y establecer relaciones(rutas) entre ellos.
+	 * @param origen. Nombre de la ciudad de origen.
+	 * @param destino. Nombre de la ciudad de destino.
+	 * @param peso. Peso (Km) de la arista.
+	 * @return String. Mensaje de respuesta.
+	 */
+	public String newRoute(String origen, String destino, int peso){
+		String[] ruta = null;
+		String[] inverted = null;
+		int indexA = -1;
+		int indexB = -1;
+		for(int i=0;i<aristas.size();i++) {
+			String[] arista = aristas.get(i);
+			if(arista[0].equals(origen) && arista[1].equals(destino)) {
+				ruta = arista;
+				indexA = i;
+			}
+			if(arista[1].equals(origen) && arista[0].equals(destino)) {
+				inverted = arista;
+				indexB = i;
+			}
+		}
+		if(ruta != null) {
+			if(Integer.parseInt(ruta[2])<peso)
+				return "Ya existe una ruta entre estas ciudades, con una distancia menor.";
+			else {
+				aristas.get(indexA)[2] = String.valueOf(peso);
+				aristas.get(indexB)[2] = String.valueOf(peso);
+				try {
+					matrizAdyacencias();
+					return "Ya existe una ruta entre estas ciudades, se ha modificado la distancia.";
+				} catch (Exception e) {
+					return "Ha ocurrido un error al actualizar el grafo.";
+				}
+			}
+		}else {
+			String[] newRoute = {origen,destino,String.valueOf(peso)};
+			String[] invertedNew = {destino,origen,String.valueOf(peso)};
+			aristas.add(newRoute);
+			aristas.add(invertedNew);
+			vertices.add(origen);
+			vertices.add(destino);
+			try {
+				matrizAdyacencias();
+				return "Ruta agregada. Se han recalculado las rutas mas cortas.";
+			}catch(Exception e) {
+				return "Incluir esta ruta convertiria al grafo en no convexo, se ha omitido la accion.";
+			}
+		}
+	}
     
 }
 
