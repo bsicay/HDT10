@@ -1,134 +1,148 @@
 // A Java program for Floyd Warshall All Pairs Shortest
 // Path algorithm.
 import java.util.*;
+
 import java.lang.*;
 import java.io.*;
 
 
 public class AllPairShortestPath
 {
-    final static int INF = 99999;
-    static int V;
-    int dist[][] = new int[V][V]; 
-
-    public void floydWarshall(int graph[][])
-    {
-        V = graph.length;
-
-       
-        int i, j, k;
-
-        /* Initialize the solution matrix
-           same as input graph matrix.
-           Or we can say the initial values
-           of shortest distances
-           are based on shortest paths
-           considering no intermediate
-           vertex. */
-        for (i = 0; i < V; i++)
-            for (j = 0; j < V; j++)
-                dist[i][j] = graph[i][j];
-
-        /* Add all vertices one by one
-           to the set of intermediate
-           vertices.
-          ---> Before start of an iteration,
-               we have shortest
-               distances between all pairs
-               of vertices such that
-               the shortest distances consider
-               only the vertices in
-               set {0, 1, 2, .. k-1} as
-               intermediate vertices.
-          ----> After the end of an iteration,
-                vertex no. k is added
-                to the set of intermediate
-                vertices and the set
-                becomes {0, 1, 2, .. k} */
-        for (k = 0; k < V; k++)
-        {
-            // Pick all vertices as source one by one
-            for (i = 0; i < V; i++)
-            {
-                // Pick all vertices as destination for the
-                // above picked source
-                for (j = 0; j < V; j++)
-                {
-                    // If vertex k is on the shortest path from
-                    // i to j, then update the value of dist[i][j]
-                    if (dist[i][k] + dist[k][j] < dist[i][j])
-                        dist[i][j] = dist[i][k] + dist[k][j];
-                }
-            }
-        }
-
-        // Print the shortest distance matrix
-        printSolution(dist);
-    }
-
-    void printSolution(int dist[][])
-    {
-        System.out.println("The following matrix shows the shortest "+
-                "distances between every pair of vertices");
-        for (int i=0; i<V; ++i)
-        {
-            for (int j=0; j<V; ++j)
-            {
-                if (dist[i][j]==INF)
-                    System.out.print("INF ");
-                else
-                    System.out.print(dist[i][j]+"   ");
-            }
-            System.out.println();
-        }
-    }
-    /*
-    // Driver program to test above function
-    public static void main (String[] args)
-    {
-        /* Let us create the following weighted graph
-           10
-        (0)------->(3)
-        |         /|\
-        5 |          |
-        |          | 1
-        \|/         |
-        (1)------->(2)
-           3           */ /*
-        int graph[][] = { {0,   30,  INF, INF, 15},
-                        {30, 0,   25, INF,40},
-                        {INF, 25, 0,   15, 70},
-                        {INF, INF, 15, 0, 90},
-                        {15, 40, 70, 90, 0}
-        };
-        AllPairShortestPath a = new AllPairShortestPath();
-
-        // Print the solution
-        a.floydWarshall(graph);
-    }
-    */
-
-    public int centroGrafo(int size){
-        int[] apsp = new int[size];
-            for (int i = 0; i < size; i++) {
-                for (int j = 0; j < size; j++) {
-                    if((dist[j][i] < apsp[i]) && (dist[j][i] != 0)){
-                        apsp[i] = dist[j][i];
-                    }
-                }
-            }
-
-            int centro = 0;
-
-            for (int i = 0; i < apsp.length; i++) {
-                if(apsp[i] > apsp[centro]){
-                    centro = i;
-                }
-            }
-
-
-        return centro;
-    }
+	private ArrayList<String[]> aristas = new ArrayList<String[]>();
+	private HashMap<String, String[]> rutas;
+	private ArrayList<String> vertices = new ArrayList<String>();
+	private String graphCenter = "";
+	
+	public void fileToGraph(String[] lines) {
+		for(String l : lines) {
+			String[] line = l.split(" ");
+			String[] inverted = l.split(" ");
+			String origen = inverted[0];
+			inverted[0] = inverted[1];
+			inverted[1] = origen;
+			if(!aristas.contains(line)) {
+				aristas.add(line);
+				aristas.add(inverted);
+			}
+			if(!vertices.contains(line[1]))
+				vertices.add(line[1]);
+			if(!vertices.contains(line[0]))
+				vertices.add(line[0]);
+		}
+		matrizAdyacencias();
+	}
+	
+	
+	/**
+	 * Se encarga de crear la matriz de adyacencia a partir de los vertices y aristas del grafo.
+	 */
+	private void matrizAdyacencias() {
+		Double[][] pesos = new Double[vertices.size()][vertices.size()];
+		for(int i =0; i<vertices.size();i++) {
+			int adyacencias = 0;
+			for(int j=0;j<vertices.size();j++) {
+				if(i==j)
+					pesos[i][j] = 0.00;
+				else {
+					boolean foundAdy = false;
+					for(String[] a : aristas) {
+						if(a[0].equals(vertices.get(i))&&a[1].equals(vertices.get(j))) {
+							pesos[i][j] = Double.parseDouble(a[2]);
+							foundAdy = true;
+							adyacencias++;
+						}
+					}
+					if(!foundAdy)
+						pesos[i][j] = Double.POSITIVE_INFINITY;
+				}
+			}
+		}
+		floyd(pesos);
+	}
+	
+	/**
+	 * Se encarga de ejecutar el algoritmo de floyd para calcular la distancia m�s corta entre dos nodos.
+	 * @param pesos. Matriz con los pesos de cada una de las aristas.
+	 */
+	private void floyd(Double[][] pesos){
+		rutas=new HashMap<String, String[]>();
+		ArrayList<String> ruta = new ArrayList<String>();
+		for(int i=0;i<vertices.size();i++) {
+			for(int j=0;j<vertices.size();j++) {
+				if(i==j) {
+					ruta = new ArrayList<String>();
+					ruta.add("0");
+					rutas.put(vertices.get(j)+", "+vertices.get(i), ruta.toArray(new String[ruta.size()]));
+				}
+				else {
+					for(int k=0;k<vertices.size();k++) {
+						if(k!=i && k!=j) {
+							ruta = new ArrayList<String>();
+							String viaje = vertices.get(j) + ", "+vertices.get(k);
+							double newRoute = pesos[j][i]+pesos[i][k];
+							if(newRoute<pesos[j][k]) {
+								pesos[j][k]=newRoute;
+								ruta.add(((Double)newRoute).toString());
+								getIntermediateCities(ruta, vertices.get(j)+", "+vertices.get(i));
+								ruta.add(vertices.get(i));
+							}else {
+								if(!rutas.containsKey(viaje))
+									ruta.add(((Double)pesos[j][k]).toString());
+							}
+							if(ruta.size()>0)
+								rutas.put(viaje, ruta.toArray(new String[ruta.size()]));
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Permite determinar las ciudades intermedias de una ruta.
+	 * @param ruta Almacena las diferentes rutas entre ciudades.
+	 * @param key Identificador de la ruta.
+	 */
+	private void getIntermediateCities(ArrayList<String> ruta, String key) {
+		if (rutas.containsKey(key)) {
+			String[] info = rutas.get(key);
+			for(int i =1;i<info.length;i++) {
+				ruta.add(info[i]);
+			}
+		}
+	}
+    
+    /**
+	 * Permite ejecutar el algoritmo y seleccionar la ruta mas corta entre dos ciudades.
+	 * @param origen. Nombre de la ciudad de origen.
+	 * @param destino. Nombre de la ciudad de destino.
+	 * @return String. Ruta de llegada mas corta.
+	 */
+	public String shorterRoute(String origen, String destino) {
+		String viaje = origen+", "+destino;
+		if(origen.equals(destino))
+			return "Se esta dirigiendo a la misma ciudad, la ruta es 0km";
+		if(rutas.containsKey(viaje)) {
+			String ruta = "";
+			ruta = "Ruta: "+rutas.get(viaje)[0];
+			ruta += rutas.get(viaje).length>1 ? " km\n"+"Ciudades intermedias: "+intermediateCities(rutas.get(viaje)) : " km";
+			return ruta;
+		}else
+			return "No se encontr� una ruta";
+	}
+	
+	/**
+	 * Se encarga de generar un String con cada una de las ciudades intermedias de una ruta.
+	 * @param cities. Arreglo que contiene diferentes nombres de ciudades.
+	 * @return String. Ciudades intermedias.
+	 */
+	private String intermediateCities(String[] cities) {
+		String iCities = "";
+		for(int i = 1;i<cities.length;i++)
+			iCities += cities[i] + ", ";
+		return iCities.substring(0, iCities.length()-2);
+	}
+    
 }
 
 // Contributed by Aakash Hasija

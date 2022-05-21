@@ -1,6 +1,12 @@
 import java.io.FileNotFoundException;
+
 import java.util.Scanner;
 import java.io.File;
+import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Reader {
@@ -8,6 +14,7 @@ public class Reader {
     Scanner scan;
     ArrayList<String> nodeArray = new ArrayList<String>();      //Contiene el nombre de los lugares
     Integer[][] matrix;
+    public static final String PATH = System.getProperty("user.dir") + "\\guategrafo.txt";
 
     public Reader(){
         findFile();
@@ -31,6 +38,29 @@ public class Reader {
             System.exit(0);
         }
     }
+    
+    /**
+	 * Metodo que se encarga de obtener todas las filas del archivo datos.txt
+	 * @return String[]. Array con cada una de las filas de texto por casilla.
+	 * @throws IOException
+	 */
+	public static String[] readFile() throws IOException {
+		
+			File doc = new File(PATH);
+
+		  BufferedReader obj = new BufferedReader(new FileReader(doc));
+		  ArrayList<String> linesList = new ArrayList<String>();
+
+		  //leer y almacenar las filas del archivo de texto
+		  String line;
+		  while ((line = obj.readLine()) != null) {
+		    linesList.add(line);
+		  }
+		  
+		  obj.close();
+		  
+		  return linesList.toArray(new String[linesList.size()]); //convertir lista a array
+	}
 
     public boolean isNumber(String str){
         boolean flag = true;
