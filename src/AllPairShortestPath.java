@@ -9,12 +9,13 @@ public class AllPairShortestPath
 {
     final static int INF = 99999;
     static int V;
+    int dist[][] = new int[V][V]; 
 
     public void floydWarshall(int graph[][])
     {
         V = graph.length;
 
-        int dist[][] = new int[V][V];
+       
         int i, j, k;
 
         /* Initialize the solution matrix
@@ -106,6 +107,28 @@ public class AllPairShortestPath
         a.floydWarshall(graph);
     }
     */
+
+    public int centroGrafo(int size){
+        int[] apsp = new int[size];
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
+                    if((dist[j][i] < apsp[i]) && (dist[j][i] != 0)){
+                        apsp[i] = dist[j][i];
+                    }
+                }
+            }
+
+            int centro = 0;
+
+            for (int i = 0; i < apsp.length; i++) {
+                if(apsp[i] > apsp[centro]){
+                    centro = i;
+                }
+            }
+
+
+        return centro;
+    }
 }
 
 // Contributed by Aakash Hasija
